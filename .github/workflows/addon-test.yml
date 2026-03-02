@@ -8,6 +8,9 @@ on:
 permissions:
   contents: read
 
+env:
+  ADDON_TEST_DIR: /home/runner/tmp/addon-test
+
 jobs:
   addon-test:
     name: Test ddev add-on get
@@ -17,20 +20,25 @@ jobs:
         run: |
           curl -fsSL https://ddev.com/install.sh | bash
 
+      - name: Configure git
+        run: |
+          git config --global user.email "ci@example.com"
+          git config --global user.name "CI"
+
       - name: Create test project
         run: |
-          mkdir -p ~/tmp/addon-test && cd ~/tmp/addon-test
+          mkdir -p $ADDON_TEST_DIR && cd $ADDON_TEST_DIR
           git init && echo "hello" > index.html
           git add . && git commit -m "init"
           ddev config --project-type=php --docroot=.
           ddev start
 
       - name: Install addon
-        working-directory: ~/tmp/addon-test
+        working-directory: ${{ env.ADDON_TEST_DIR }}
         run: ddev add-on get ${{ github.repository }}
 
       - name: Verify addon installed
-        working-directory: ~/tmp/addon-test
+        working-directory: ${{ env.ADDON_TEST_DIR }}
         run: |
           # Verify the binary was downloaded
           test -x .ddev/bin/ddev-clone
@@ -42,14 +50,14 @@ jobs:
           ddev clone --help
 
       - name: Test clone create
-        working-directory: ~/tmp/addon-test
+        working-directory: ${{ env.ADDON_TEST_DIR }}
         run: |
           ddev clone create test-branch --no-start
           ddev clone list
 
       - name: Cleanup
         if: always()
-        working-directory: ~/tmp/addon-test
+        working-directory: ${{ env.ADDON_TEST_DIR }}
         run: |
           ddev clone remove test-branch --force 2>/dev/null || true
           ddev delete -Oy 2>/dev/null || true
