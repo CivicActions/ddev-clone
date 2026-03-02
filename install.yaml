@@ -10,7 +10,7 @@ post_install_actions:
     BINDIR="${DDEV_APPROOT}/.ddev/bin"
     mkdir -p "${BINDIR}"
     REPO="civicactions/ddev-clone"
-    VERSION=$(curl -sSfL "https://api.github.com/repos/${REPO}/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+    VERSION=$(curl -sSfL "https://api.github.com/repos/${REPO}/releases" | grep '"tag_name"' | head -1 | sed -E 's/.*"([^"]+)".*/\1/')
     TARBALL="ddev-clone_${DDEV_GOOS}_${DDEV_GOARCH}.tar.gz"
     curl -sSfL "https://github.com/${REPO}/releases/download/${VERSION}/${TARBALL}" -o "/tmp/${TARBALL}"
     EXT=""
