@@ -1,0 +1,26 @@
+name: ddev-clone
+ddev_version_constraint: '>= v1.24.10'
+
+project_files:
+  - commands/host/clone
+
+post_install_actions:
+  - |
+    #ddev-description:Download ddev-clone binary for this platform
+    BINDIR="${DDEV_APPROOT}/.ddev/bin"
+    mkdir -p "${BINDIR}"
+    REPO="civicactions/ddev-clone"
+    VERSION=$(curl -sSfL "https://api.github.com/repos/${REPO}/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+    TARBALL="ddev-clone_${DDEV_GOOS}_${DDEV_GOARCH}.tar.gz"
+    curl -sSfL "https://github.com/${REPO}/releases/download/${VERSION}/${TARBALL}" -o "/tmp/${TARBALL}"
+    EXT=""
+    if [ "${DDEV_GOOS}" = "windows" ]; then EXT=".exe"; fi
+    tar -xzf "/tmp/${TARBALL}" -C "${BINDIR}/" "ddev-clone${EXT}"
+    chmod +x "${BINDIR}/ddev-clone${EXT}"
+    rm -f "/tmp/${TARBALL}"
+
+removal_actions:
+  - |
+    EXT=""
+    if [ "${DDEV_GOOS}" = "windows" ]; then EXT=".exe"; fi
+    rm -f "${DDEV_APPROOT}/.ddev/bin/ddev-clone${EXT}"

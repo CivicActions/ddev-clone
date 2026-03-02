@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+## Description: Clone management (create, list, remove, prune)
+## Usage: clone [command] [flags]
+## Example: ddev clone create feature-x\nddev clone list\nddev clone remove feature-x
+## ExecRaw: true
+
+exec "${DDEV_APPROOT}/.ddev/bin/ddev-clone" "$@"

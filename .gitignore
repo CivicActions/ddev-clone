@@ -1,0 +1,28 @@
+# Go build outputs
+bin/
+*.exe
+*.test
+*.out
+*.prof*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# Environment
+.env*
+
+# Release artifacts
+dist/
+*.tar.gz
+
+# Coverage
+coverage.out
+coverage.html

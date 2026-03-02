@@ -1,0 +1,55 @@
+name: Addon Integration Test
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  addon-test:
+    name: Test ddev add-on get
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install DDEV
+        run: |
+          curl -fsSL https://ddev.com/install.sh | bash
+
+      - name: Create test project
+        run: |
+          mkdir -p ~/tmp/addon-test && cd ~/tmp/addon-test
+          git init && echo "hello" > index.html
+          git add . && git commit -m "init"
+          ddev config --project-type=php --docroot=.
+          ddev start
+
+      - name: Install addon
+        working-directory: ~/tmp/addon-test
+        run: ddev add-on get ${{ github.repository }}
+
+      - name: Verify addon installed
+        working-directory: ~/tmp/addon-test
+        run: |
+          # Verify the binary was downloaded
+          test -x .ddev/bin/ddev-clone
+
+          # Verify the host command wrapper was installed
+          test -f .ddev/commands/host/clone
+
+          # Verify the command is available via ddev
+          ddev clone --help
+
+      - name: Test clone create
+        working-directory: ~/tmp/addon-test
+        run: |
+          ddev clone create test-branch --no-start
+          ddev clone list
+
+      - name: Cleanup
+        if: always()
+        working-directory: ~/tmp/addon-test
+        run: |
+          ddev clone remove test-branch --force 2>/dev/null || true
+          ddev delete -Oy 2>/dev/null || true
