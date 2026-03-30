@@ -3,7 +3,7 @@ module github.com/civicactions/ddev-clone
 go 1.24.0
 
 require (
-	github.com/go-git/go-git/v5 v5.17.0
+	github.com/go-git/go-git/v5 v5.17.1
 	github.com/moby/moby/api v1.52.0
 	github.com/moby/moby/client v0.2.1
 	github.com/otiai10/copy v1.14.1
@@ -15,7 +15,7 @@ require (
 	dario.cat/mergo v1.0.0 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/ProtonMail/go-crypto v1.1.6 // indirect
-	github.com/cloudflare/circl v1.6.1 // indirect
+	github.com/cloudflare/circl v1.6.3 // indirect
 	github.com/containerd/errdefs v1.0.0 // indirect
 	github.com/containerd/errdefs/pkg v0.3.0 // indirect
 	github.com/cyphar/filepath-securejoin v0.4.1 // indirect
